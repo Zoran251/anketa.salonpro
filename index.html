@@ -7,81 +7,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--gold:#c9a84c;--gold-light:#e8d5a3;--gold-dark:#8a6020;--gold-dim:#5a4820;--black:#080808;--black2:#0d0d0d;--border-gold:#2a2014;}
-html{scroll-behavior:smooth}
-body{background:var(--black);color:var(--gold-light);font-family:'Montserrat',sans-serif;min-height:100vh;overflow-x:hidden;}
-.hero{padding:60px 24px;text-align:center;border-bottom:1px solid var(--gold-dark);}
-.hero-title{font-family:'Cormorant Garamond',serif;font-size:48px;color:var(--gold-light);margin-bottom:20px;}
-.hero-title strong{color:var(--gold);}
-main{max-width:680px;margin:0 auto;padding:40px 20px;}
-.q-card{display:none;background:var(--black2);border:0.5px solid var(--border-gold);padding:36px;margin-top:20px;}
-.q-card.active{display:block;}
-.text-input{width:100%;background:#060606;border:0.5px solid var(--border-gold);padding:14px;color:var(--gold-light);margin-top:10px;}
-.btn-next{background:transparent;border:1px solid var(--gold);padding:13px 36px;color:var(--gold);text-transform:uppercase;cursor:pointer;margin-top:20px;}
-.ty{display:none;text-align:center;padding:64px 32px;}
-.ty.active{display:block;}
-</style>
-</head>
-<body>
-
-<header class="hero">
-    <h1 class="hero-title">Digitalizacija <strong>Beauty Industrije 2026</strong></h1>
-</header>
-
-<main id="anketa-container">
-    <div id="questions-wrapper">
-        <div class="q-card active">
-            <h3>Pitanje 1</h3>
-            <input type="text" class="text-input" placeholder="Odgovor...">
-            <button class="btn-next">Dalje</button>
-        </div>
-        </div>
-    
-    <div id="ty-screen" class="ty">
-        <h2 class="ty-title">Hvala na odgovorima!</h2>
-        <p>Vaši podaci su uspješno zabilježeni.</p>
-    </div>
-</main>
-
-<script>
-// Funkcija za slanje podataka na Formspree
-function submitToFormspree(data) {
-  const formData = new FormData();
-  // Mapiraj svoje podatke ovdje
-  for (let key in data) {
-    formData.append(key, data[key]);
-  }
-
-  fetch('https://formspree.io/f/xjgdgjzv', {
-    method: 'POST',
-    body: formData,
-    headers: { 'Accept': 'application/json' }
-  })
-  .then(response => {
-    if(response.ok) {
-        document.getElementById('questions-wrapper').style.display = 'none';
-        document.getElementById('ty-screen').classList.add('active');
-    } else {
-        alert("Greška pri slanju.");
-    }
-  })
-  .catch(error => console.error('Greška:', error));
-}
-
-// Ovdje treba da stoji tvoja logika za prikupljanje odgovora
-// Kada dođeš do kraja, pozovi: submitToFormspree(tvojiPodaci);
-</script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="sr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Digitalizacija Beauty Industrije 2026 | Salon Pro × Z&D Digital</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Montserrat:wght@200;300;400;500;600&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
 :root{
   --gold:#c9a84c;
   --gold-light:#e8d5a3;
@@ -668,9 +593,8 @@ function submit(){
     if(oi&&oi.classList.contains('show'))notes[n]=oi.value;
   });
 
-  // Build FormData for Netlify
+  // Build FormData for Formspree
   var formData=new FormData();
-  formData.append('form-name','salon-pro-anketa-2026');
   formData.append('q1_naziv_salona_grad', answers[1]||'');
   formData.append('q2_telefon_prekidi', q2labels[answers[2]]||answers[2]||'');
   formData.append('q2_komentar', notes['2']||'');
@@ -685,10 +609,14 @@ function submit(){
   formData.append('q7_rezime_istrazivanja', q7labels[answers[7]]||answers[7]||'');
   formData.append('q7_telefon', q7phone.value||'');
 
-  // Submit to Netlify silently
-  fetch('/', {method:'POST', body:formData})
-    .then(function(){ console.log('Netlify: odgovori sačuvani'); })
-    .catch(function(e){ console.warn('Netlify submit error:', e); });
+  // Submit to Formspree silently
+  fetch('https://formspree.io/f/xjgdgjzv', {
+    method:'POST',
+    body:formData,
+    headers:{'Accept':'application/json'}
+  })
+    .then(function(){ console.log('Formspree: odgovori sačuvani'); })
+    .catch(function(e){ console.warn('Formspree submit error:', e); });
 
   // Show thank you screen
   document.getElementById('q7').classList.remove('active');
